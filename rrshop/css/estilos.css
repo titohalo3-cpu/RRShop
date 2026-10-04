@@ -1,0 +1,1404 @@
+/* ===========================================================
+   BALATROSHOP
+   1. Variables    2. Base        3. Rejilla
+   4. Piezas       5. Tienda      6. Biblioteca
+   7. Comercio     8. Tooltip     9. Sobres
+  10. Modales     11. Animaciones
+   =========================================================== */
+
+
+/* ===========================================================
+   1. VARIABLES
+   =========================================================== */
+
+:root{
+  --mesa:        #1F3635;
+  --mesa-alta:   #26403F;
+  --panel:       #2D3A42;
+  --panel-alto:  #3A4A54;
+  --hueco:       #1B252B;
+  --borde:       #141D22;
+
+  --rojo:        #FE5F55;
+  --rojo-hondo:  #B93E37;
+  --azul:        #0093FF;
+  --azul-hondo:  #0069B8;
+  --verde:       #4BC292;
+  --verde-hondo: #2F8A65;
+  --oro:         #F4B63F;
+
+  --tinta:       #FFFFFF;
+  --tinta-tenue: #9DB2BC;
+  --sombra:      0 4px 0 var(--borde);
+}
+
+
+/* ===========================================================
+   2. BASE
+   =========================================================== */
+
+*{ box-sizing: border-box; }
+
+body{
+  margin:0;
+  min-height:100vh;
+  padding:clamp(12px, 2.5vw, 28px);
+  background: radial-gradient(ellipse at 50% 0%, var(--mesa-alta) 0%, var(--mesa) 70%);
+  color:var(--tinta);
+  font-family:"Pixelify Sans", "Trebuchet MS", Verdana, sans-serif;
+  font-size:16px;
+  line-height:1.4;
+}
+
+a{ color:var(--oro); }
+
+
+/* ===========================================================
+   3. REJILLA PRINCIPAL
+   =========================================================== */
+
+.mesa{
+  max-width:1180px;
+  margin:0 auto;
+  display:grid;
+  gap:14px;
+  grid-template-columns: 210px minmax(0,1fr) 190px;
+  grid-template-areas:
+    "tienda biblioteca pendiente"
+    "tienda comercio   comercio";
+  align-items:start;
+}
+
+@media (max-width:900px){
+  .mesa{
+    grid-template-columns: minmax(0,1fr);
+    grid-template-areas:
+      "biblioteca"
+      "tienda"
+      "comercio"
+      "pendiente";
+  }
+}
+
+
+/* ===========================================================
+   4. PIEZAS COMUNES
+   =========================================================== */
+
+.bloque{
+  background:var(--panel);
+  border:3px solid var(--borde);
+  border-radius:10px;
+  box-shadow:var(--sombra);
+  padding:12px;
+}
+
+.rotulo{
+  margin:0 0 8px;
+  font-size:.8rem;
+  font-weight:500;
+  color:var(--tinta-tenue);
+}
+
+.separador{
+  height:3px;
+  background:var(--borde);
+  border-radius:2px;
+}
+
+.mensaje{
+  margin:0;
+  padding:20px 4px;
+  font-size:.8rem;
+  color:var(--tinta-tenue);
+}
+
+.boton{
+  font:inherit;
+  font-weight:600;
+  color:var(--tinta);
+  background:var(--azul);
+  border:3px solid var(--borde);
+  border-radius:8px;
+  box-shadow:0 4px 0 var(--azul-hondo);
+  padding:9px 12px;
+  width:100%;
+  cursor:pointer;
+}
+
+.boton:focus-visible{
+  outline:3px solid var(--oro);
+  outline-offset:3px;
+}
+
+.boton--verde{ background:var(--verde); box-shadow:0 4px 0 var(--verde-hondo); }
+.boton--rojo{  background:var(--rojo);  box-shadow:0 4px 0 var(--rojo-hondo); }
+
+
+/* ===========================================================
+   5. COLUMNA DE LA TIENDA
+   =========================================================== */
+
+.tienda{
+  grid-area:tienda;
+  display:grid;
+  gap:14px;
+}
+
+.cartel{
+  position:relative;
+  display:grid;
+  place-items:center;
+  padding:26px 10px;
+  border:3px solid var(--borde);
+  border-radius:10px;
+  background:var(--hueco);
+  box-shadow:var(--sombra);
+  overflow:hidden;
+}
+
+/* Efecto ruleta girando por detras del texto */
+.cartel::before{
+  content:"";
+  position:absolute;
+  inset:-60%;
+  background: conic-gradient(
+    var(--rojo)  0     45deg,  transparent 45deg  90deg,
+    var(--oro)   90deg 135deg, transparent 135deg 180deg,
+    var(--azul)  180deg 225deg, transparent 225deg 270deg,
+    var(--verde) 270deg 315deg, transparent 315deg 360deg);
+  opacity:.22;
+  animation: gira 9s linear infinite;
+}
+
+.cartel h1{
+  position:relative;
+  margin:0;
+  font-size:2rem;
+  font-weight:700;
+  letter-spacing:.06em;
+  color:var(--oro);
+  text-shadow:0 3px 0 var(--borde);
+}
+
+.cartel p{
+  position:relative;
+  margin:6px 0 0;
+  font-size:.8rem;
+  color:var(--tinta-tenue);
+  text-align:center;
+}
+
+/* --- Carrito, con aspecto de vale troquelado --- */
+.vale{
+  position:relative;
+  background:var(--oro);
+  color:var(--borde);
+  border-radius:8px;
+  padding:14px 12px;
+  text-align:center;
+  box-shadow:var(--sombra);
+  -webkit-mask:
+    radial-gradient(circle 8px at 0 50%,    transparent 98%, #000),
+    radial-gradient(circle 8px at 100% 50%, transparent 98%, #000);
+  -webkit-mask-composite: source-in;
+  mask:
+    radial-gradient(circle 8px at 0 50%,    transparent 98%, #000),
+    radial-gradient(circle 8px at 100% 50%, transparent 98%, #000);
+  mask-composite: intersect;
+}
+
+.vale strong{ display:block; font-size:1.5rem; line-height:1; }
+.vale span{ font-size:.75rem; }
+
+.vale::after{
+  content:"";
+  position:absolute;
+  inset:6px;
+  border:2px dashed rgba(20,29,34,.45);
+  border-radius:5px;
+  pointer-events:none;
+}
+
+/* --- Buscador --- */
+.buscador{ display:grid; gap:8px; }
+
+.buscador input{
+  font:inherit;
+  width:100%;
+  padding:9px 10px;
+  color:var(--tinta);
+  background:var(--hueco);
+  border:3px solid var(--borde);
+  border-radius:8px;
+}
+
+.buscador input::placeholder{ color:#5E747E; }
+
+.buscador input:focus{
+  outline:3px solid var(--oro);
+  outline-offset:2px;
+}
+
+
+/* ===========================================================
+   6. BIBLIOTECA Y ZONA PENDIENTE
+   =========================================================== */
+
+.biblioteca{ grid-area:biblioteca; }
+
+.biblioteca header{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  gap:10px;
+}
+
+.contador{ font-size:.8rem; color:var(--oro); }
+
+.fila-slots{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  padding-bottom:4px;
+}
+
+.slot{
+  flex:0 0 auto;
+  width:64px;
+  aspect-ratio:5 / 7;
+  border:3px dashed #46585F;
+  border-radius:7px;
+  background:var(--hueco);
+  overflow:hidden;
+}
+
+.slot{ position:relative; }   /* ancla del tooltip */
+
+.slot--lleno{
+  border-style:solid;
+  border-color:var(--borde);
+  cursor:pointer;
+  transition: transform .18s ease-out, box-shadow .18s ease-out;
+  z-index:1;
+  overflow:visible;           /* si no, recortaria el tooltip */
+}
+
+.slot--lleno:hover,
+.slot--lleno:focus-visible{
+  transform: scale(1.18);
+  box-shadow: 0 14px 22px rgba(0,0,0,.5);
+  z-index:5;
+}
+
+.slot--lleno .portada{
+  aspect-ratio:auto;
+  height:100%;
+  border-radius:4px;
+}
+
+.vales-activos{ grid-area:pendiente; }
+
+.pendiente .caja{
+  border:3px dashed #46585F;
+  border-radius:8px;
+  min-height:120px;
+  display:grid;
+  place-items:center;
+  padding:10px;
+  text-align:center;
+  font-size:.75rem;
+  color:var(--tinta-tenue);
+  background:var(--hueco);
+}
+
+
+
+
+/* ===========================================================
+   7. PANEL DE COMPRA
+   =========================================================== */
+
+.comercio{
+  grid-area:comercio;
+  background:var(--panel-alto);
+  display:grid;
+  gap:12px;
+}
+
+.estante{
+  display:grid;
+  grid-template-columns: 130px minmax(0,1fr);
+  gap:12px;
+  align-items:start;
+}
+
+@media (max-width:560px){
+  .estante{ grid-template-columns: minmax(0,1fr); }
+}
+
+.mandos{ display:grid; gap:8px; }
+.mandos .boton{ font-size:.8rem; }
+
+/* flex-wrap en vez de overflow-x: un contenedor con overflow
+   recorta cualquier hijo posicionado que se salga, y el tooltip
+   de la carta necesita salirse. */
+.juegos,
+.sobres{
+  display:flex;
+  flex-wrap:wrap;
+  gap:14px;
+  padding:14px 0 4px;   /* hueco arriba para la etiqueta de precio */
+}
+
+/* --- Carta de juego: solo portada y precio --- */
+.carta{
+  flex:0 0 auto;
+  width:132px;
+  background:var(--panel);
+  border:3px solid var(--borde);
+  border-radius:9px;
+  padding:6px;
+  box-shadow:var(--sombra);
+  position:relative;    /* ancla del tooltip y de la etiqueta */
+  cursor:pointer;
+}
+
+.carta:focus-visible,
+.sobre:focus-visible{
+  outline:3px solid var(--oro);
+  outline-offset:2px;
+}
+
+/* La portada es una caja con el titulo de fondo y la imagen encima.
+   Si la imagen no carga, el JS la quita y queda el titulo. */
+.portada{
+  position:relative;
+  width:100%;
+  aspect-ratio:2 / 3;   /* igual que la vertical de Steam, 600x900 */
+  border-radius:5px;
+  overflow:hidden;
+  background:var(--hueco);
+  display:grid;
+  place-items:center;
+  padding:6px;
+}
+
+/* Titulo de fondo: se ve si la imagen no carga */
+.portada-texto{
+  font-size:.72rem;
+  font-weight:600;
+  text-align:center;
+  line-height:1.2;
+  color:var(--tinta-tenue);
+}
+
+/* Las portadas son apaisadas y la carta es vertical.
+   Capa 1: copia ampliada y desenfocada que rellena el hueco.
+   Capa 2: la imagen entera, sin recortar, centrada encima. */
+.portada-fondo{
+  position:absolute;
+  inset:-8%;
+  width:116%;
+  height:116%;
+  object-fit:cover;
+  filter: blur(14px) brightness(.5) saturate(1.3);
+  z-index:0;
+}
+
+.portada-frente{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:contain;   /* entera, sin recortar */
+  z-index:1;
+}
+
+/* Si la imagen ya es vertical (la de Steam) encaja justa:
+   sobra el desenfoque y la dejamos llenar la caja. */
+.portada--vertical .portada-fondo{ display:none; }
+.portada--vertical .portada-frente{ object-fit:cover; }
+
+.etiqueta-precio{
+  position:absolute;
+  top:-12px;
+  left:50%;
+  transform:translateX(-50%);
+  background:var(--oro);
+  color:var(--borde);
+  border:3px solid var(--borde);
+  border-radius:6px;
+  padding:1px 8px;
+  font-weight:700;
+  font-size:.85rem;
+  white-space:nowrap;
+  z-index:2;
+}
+
+.sello{
+  position:absolute;
+  bottom:10px;
+  left:50%;
+  transform:translateX(-50%);
+  padding:1px 8px;
+  border-radius:5px;
+  font-size:.66rem;
+  font-weight:600;
+  background:var(--rojo);
+  border:2px solid var(--borde);
+  z-index:2;
+  white-space:nowrap;
+}
+
+
+/* ===========================================================
+   8. TOOLTIP, al estilo del joker de Balatro
+   =========================================================== */
+
+.info{
+  /* visibility + opacity permiten animar la aparicion.
+     Con display:none no se podria. */
+  visibility:hidden;
+  opacity:0;
+  transition: opacity .12s ease-out;
+
+  position:absolute;
+  right:calc(100% + 10px);   /* justo fuera del borde izquierdo */
+  top:50%;
+  transform:translateY(-50%);
+  width:190px;
+  z-index:6;
+
+  background:#E6EDEC;
+  color:#2A2F33;
+  border:4px solid #F4F8F7;
+  border-radius:10px;
+  box-shadow:0 4px 0 rgba(0,0,0,.45);
+  padding:8px;
+  text-align:center;
+  pointer-events:none;       /* si no, roba el hover y parpadea */
+}
+
+.carta:hover .info,
+.carta:focus-visible .info{
+  visibility:visible;
+  opacity:1;
+}
+
+.info-titulo{
+  display:block;
+  background:#4E5A60;
+  color:#fff;
+  border-radius:5px;
+  padding:3px 6px;
+  font-size:.8rem;
+  line-height:1.2;
+}
+
+.info-precio{
+  margin:7px 0;
+  font-size:.9rem;
+  font-weight:700;
+  color:#C07A16;
+}
+
+.info-precio .antes{
+  font-size:.72rem;
+  color:#6C7A80;
+  text-decoration: line-through;
+  margin-left:4px;
+}
+
+.info-categorias{
+  list-style:none;           /* fuera las vinetas */
+  margin:0;
+  padding:0;
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:5px;
+}
+
+.info-categorias li{
+  background:var(--verde);
+  color:#0C2A1E;
+  border-radius:5px;
+  padding:2px 8px;
+  font-size:.68rem;
+  font-weight:600;
+}
+
+/* Variante para los slots de arriba: el tooltip cae por debajo,
+   porque arriba no hay sitio. */
+.info--abajo{
+  right:auto;
+  left:50%;
+  top:calc(100% + 12px);
+  bottom:auto;
+  transform:translateX(-50%);
+}
+
+.slot--lleno:hover .info,
+.slot--lleno:focus-visible .info{
+  visibility:visible;
+  opacity:1;
+}
+
+/* En pantallas estrechas no cabe al lado: va encima */
+@media (max-width:700px){
+  .info{
+    right:auto;
+    left:50%;
+    top:auto;
+    bottom:calc(100% + 10px);
+    transform:translateX(-50%);
+  }
+}
+
+
+/* ===========================================================
+   9. SOBRES
+   =========================================================== */
+
+.sobre{
+  flex:0 0 auto;
+  width:114px;
+  border:3px solid var(--borde);
+  border-radius:9px;
+  padding:6px;
+  background:var(--panel);
+  box-shadow:var(--sombra);
+  position:relative;
+  text-align:center;
+  cursor:pointer;
+}
+
+.envoltorio{
+  aspect-ratio:3 / 4;
+  border-radius:5px;
+  display:grid;
+  place-items:center;
+  padding:8px;
+  font-size:.74rem;
+  font-weight:700;
+  line-height:1.2;
+  color:#fff;
+  text-shadow:0 2px 0 rgba(0,0,0,.5);
+  /* Borde dentado, como un sobre de cromos */
+  border-top:5px dotted rgba(255,255,255,.55);
+  border-bottom:5px dotted rgba(255,255,255,.55);
+}
+
+.envoltorio--rojo{  background:linear-gradient(170deg,#E3484A,#8E1F2E); }
+.envoltorio--azul{  background:linear-gradient(170deg,#2E86D8,#14375E); }
+.envoltorio--verde{ background:linear-gradient(170deg,#3FA86F,#16402C); }
+
+.sobre .nota{
+  margin:6px 0 0;
+  font-size:.64rem;
+  color:var(--tinta-tenue);
+  line-height:1.25;
+}
+
+
+/* ===========================================================
+   10. MODALES
+   =========================================================== */
+
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(10,18,22,.78);
+  place-items:center;
+  padding:20px;
+  z-index:10;
+}
+
+.modal--visible{ display:grid; }
+
+.modal-caja{
+  background:var(--panel);
+  border:3px solid var(--borde);
+  border-radius:12px;
+  box-shadow:var(--sombra);
+  padding:22px;
+  text-align:center;
+  animation: aparecer .2s ease-out;
+}
+
+.modal-caja{
+  width:min(100%, 820px);
+  max-height:88vh;
+  overflow-y:auto;
+}
+
+.modal-caja h2{
+  margin:0 0 14px;
+  font-size:1.1rem;
+  color:var(--oro);
+}
+
+.modal-cartas{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:16px;
+  padding:16px 0 18px;
+}
+
+.modal-caja .boton{ width:auto; padding:9px 24px; }
+
+.aviso-caja{ max-width:300px; }
+
+.aviso-caja strong{
+  display:block;
+  font-size:1.8rem;
+  color:var(--rojo);
+  margin-bottom:6px;
+}
+
+.aviso-caja p{
+  margin:0 0 14px;
+  font-size:.85rem;
+  color:var(--tinta-tenue);
+}
+
+
+/* ===========================================================
+   11. ANIMACIONES
+   Solo se animan transform y opacity: son las dos propiedades
+   que el navegador resuelve en la tarjeta grafica.
+   =========================================================== */
+
+.carta,
+.sobre{
+  transition: transform .18s ease-out, box-shadow .18s ease-out;
+  z-index:1;
+}
+
+/* La carta se acerca al usuario: crece y proyecta mas sombra.
+   El z-index alto hace que pase por delante de sus vecinas. */
+.carta:hover,
+.carta:focus-visible{
+  transform: scale(1.18);
+  box-shadow: 0 14px 22px rgba(0,0,0,.5);
+  z-index:4;
+}
+
+.sobre:hover,
+.sobre:focus-visible{
+  transform: scale(1.14);
+  box-shadow: 0 14px 22px rgba(0,0,0,.5);
+  z-index:4;
+}
+
+/* Rasgado del sobre al hacer clic */
+@keyframes rasgar{
+  0%  { transform: rotate(0)     scale(1); }
+  25% { transform: rotate(-6deg) scale(1.08); }
+  50% { transform: rotate(5deg)  scale(1.08); }
+  75% { transform: rotate(-3deg) scale(1.04); }
+  100%{ transform: rotate(0)     scale(1); }
+}
+
+.sobre--abriendo{ animation: rasgar .4s ease-in-out; }
+
+/* Boton que se hunde al pulsar */
+.boton{ transition: transform .06s, box-shadow .06s; }
+
+.boton:active{
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 var(--azul-hondo);
+}
+
+.boton--verde:active{ box-shadow: 0 1px 0 var(--verde-hondo); }
+.boton--rojo:active{  box-shadow: 0 1px 0 var(--rojo-hondo); }
+
+@keyframes gira{
+  to{ transform: rotate(360deg); }
+}
+
+/* Reparto de cartas.
+   'backwards' hace que la carta adopte el estado inicial ANTES
+   de empezar. Sin el, se ve un instante en su sitio y luego salta. */
+@keyframes repartir{
+  from{ opacity:0; transform: translateY(-40px) rotate(-12deg); }
+  to{   opacity:1; transform: translateY(0)     rotate(0); }
+}
+
+.repartir{ animation: repartir .35s ease-out backwards; }
+
+@keyframes aparecer{
+  from{ opacity:0; transform: scale(.9); }
+  to{   opacity:1; transform: scale(1); }
+}
+
+/* Accesibilidad: hay gente a la que el movimiento le provoca mareo */
+@media (prefers-reduced-motion: reduce){
+  *{
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+
+/* ===========================================================
+   PIE
+   =========================================================== */
+
+footer{
+  max-width:1180px;
+  margin:16px auto 0;
+  font-size:.72rem;
+  color:var(--tinta-tenue);
+  text-align:center;
+}
+
+
+/* ===========================================================
+   12. BARRA DE DIAGNOSTICO
+   Oculta salvo que una API falle. Muestra el error de verdad.
+   =========================================================== */
+
+.barra-error{
+  display:none;
+  max-width:1180px;
+  margin:0 auto 14px;
+  padding:10px 14px;
+  background:var(--rojo);
+  color:#2A0F0D;
+  border:3px solid var(--borde);
+  border-radius:8px;
+  font-size:.75rem;
+  line-height:1.4;
+}
+
+.barra-error--visible{ display:block; }
+
+
+/* ===========================================================
+   13. SUGERENCIAS DEL BUSCADOR
+   =========================================================== */
+
+/* El ancla es .campo, que contiene solo el input y la lista.
+   Si el ancla fuese .buscador, la lista caeria por debajo del
+   boton Buscar en vez de pegada al campo de texto. */
+.campo{ position:relative; }
+
+.sugerencias{
+  display:none;
+  list-style:none;
+  margin:0;
+  padding:4px;
+
+  position:absolute;
+  top:calc(100% + 4px);      /* justo debajo del campo */
+  left:0;
+  right:0;
+  z-index:9;
+
+  max-height:260px;
+  overflow-y:auto;
+
+  background:var(--hueco);
+  border:3px solid var(--borde);
+  border-radius:8px;
+  box-shadow:var(--sombra);
+}
+
+.sugerencias--visible{ display:block; }
+
+.sugerencia{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  padding:5px 6px;
+  border-radius:5px;
+  cursor:pointer;
+  font-size:.72rem;
+  line-height:1.2;
+}
+
+.sugerencia:hover,
+.sugerencia:focus-visible{
+  background:var(--azul-hondo);
+  outline:none;
+}
+
+.sugerencia img{
+  width:34px;
+  height:auto;
+  border-radius:3px;
+  flex:0 0 auto;
+}
+
+.sugerencia-titulo{
+  flex:1 1 auto;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.sugerencia-precio{
+  flex:0 0 auto;
+  color:var(--oro);
+  font-weight:600;
+}
+
+.slot-texto{
+  display:grid;
+  place-items:center;
+  height:100%;
+  padding:4px;
+  text-align:center;
+  font-size:.58rem;
+  line-height:1.15;
+  color:var(--tinta-tenue);
+}
+
+
+/* ===========================================================
+   14. BIBLIOTECA LLENA
+   Ni modal ni bloqueo: el aviso se queda puesto, en semi
+   transparente, y la biblioteca se sacude al intentar comprar.
+   =========================================================== */
+
+.aviso-lleno{
+  display:none;
+  margin:10px 0 0;
+  padding:6px 8px;
+  border:2px dashed var(--rojo);
+  border-radius:6px;
+  font-size:.7rem;
+  text-align:center;
+  color:var(--rojo);
+  opacity:.65;               /* mas transparente, sin tapar nada */
+}
+
+.biblioteca--llena .aviso-lleno{ display:block; }
+
+/* Vibracion continua y suave de los huecos cuando esta llena */
+@keyframes latir{
+  0%, 100%{ transform: translateX(0); }
+  25%     { transform: translateX(-1.5px); }
+  75%     { transform: translateX(1.5px); }
+}
+
+.biblioteca--llena .slot{
+  animation: latir 1.4s ease-in-out infinite;
+}
+
+/* Sacudida fuerte al intentar elegir sin huecos */
+@keyframes sacudir{
+  0%, 100%{ transform: translateX(0); }
+  15%     { transform: translateX(-9px); }
+  30%     { transform: translateX(8px); }
+  45%     { transform: translateX(-6px); }
+  60%     { transform: translateX(5px); }
+  80%     { transform: translateX(-3px); }
+}
+
+.sacudir{ animation: sacudir .4s ease-in-out; }
+
+
+/* ===========================================================
+   15. BOTON DE QUITAR JUEGO DEL SLOT
+   =========================================================== */
+
+.quitar{
+  position:absolute;
+  top:-9px;
+  right:-9px;
+  width:22px;
+  height:22px;
+  padding:0;
+  font:inherit;
+  font-size:.9rem;
+  line-height:1;
+  color:#fff;
+  background:var(--rojo);
+  border:3px solid var(--borde);
+  border-radius:50%;
+  cursor:pointer;
+  z-index:7;
+
+  opacity:0;
+  transition: opacity .12s;
+}
+
+.slot--lleno:hover .quitar,
+.slot--lleno:focus-within .quitar{ opacity:1; }
+
+.quitar:focus-visible{ outline:3px solid var(--oro); }
+
+
+/* ===========================================================
+   16. VALES
+   =========================================================== */
+
+
+
+.fila-vales{
+  display:flex;
+  gap:12px;
+  padding:14px 0 4px;
+}
+
+/* El vale tiene forma de cupon vertical, como el VOUCHER
+   de Balatro: misma caja que una carta, otro relleno. */
+.vale-carta{
+  position:relative;
+  flex:0 0 auto;
+  width:114px;
+  padding:6px;
+  background:var(--panel);
+  border:3px solid var(--borde);
+  border-radius:9px;
+  box-shadow:var(--sombra);
+  cursor:pointer;
+  text-align:center;
+  transition: transform .18s ease-out, box-shadow .18s ease-out;
+  z-index:1;
+}
+
+.vale-carta:hover,
+.vale-carta:focus-visible{
+  transform: scale(1.14);
+  box-shadow:0 14px 22px rgba(0,0,0,.5);
+  outline:none;
+  z-index:4;
+}
+
+.vale-cuerpo{
+  aspect-ratio:2 / 3;
+  border-radius:5px;
+  display:grid;
+  place-items:center;
+  align-content:center;
+  gap:8px;
+  padding:8px;
+  background:linear-gradient(170deg,#6C63C8,#2B2758);
+  border-top:5px solid rgba(255,255,255,.5);
+  border-bottom:5px solid rgba(255,255,255,.5);
+}
+
+.vale-icono{
+  display:grid;
+  place-items:center;
+  width:32px;
+  height:32px;
+  border-radius:6px;
+  background:rgba(255,255,255,.85);
+  color:#2B2758;
+  font-size:1.1rem;
+  font-weight:700;
+}
+
+.vale-carta strong{
+  display:block;
+  font-size:.7rem;
+  line-height:1.2;
+  color:#fff;
+  text-shadow:0 2px 0 rgba(0,0,0,.5);
+}
+
+.vale-carta--activo .vale-cuerpo{
+  background:linear-gradient(170deg,#E0A92C,#7A5407);
+}
+
+.vale-carta--activo strong{ color:#2A1E02; text-shadow:none; }
+
+.vale-carta:hover .info,
+.vale-carta:focus-visible .info{
+  visibility:visible;
+  opacity:1;
+}
+
+/* Destello al renovar la tanda */
+@keyframes renovar{
+  from{ opacity:0; transform: translateY(-10px); }
+  to{   opacity:1; transform: translateY(0); }
+}
+
+.renovado > *{ animation: renovar .3s ease-out backwards; }
+.renovado > *:nth-child(2){ animation-delay:.08s; }
+
+
+/* ===========================================================
+   17. DETALLES SUELTOS
+   =========================================================== */
+
+.pie-bloque{
+  margin:8px 0 0;
+  font-size:.66rem;
+  color:var(--tinta-tenue);
+  text-align:center;
+}
+
+.pie-bloque span{ color:var(--oro); }
+
+.modal-texto{
+  margin:0 0 6px;
+  font-size:.74rem;
+  color:var(--tinta-tenue);
+}
+
+.info-texto{
+  margin:7px 0;
+  font-size:.68rem;
+  line-height:1.35;
+  color:#3C464C;
+}
+
+/* La carta que acabas de elegir se va del escaparate */
+@keyframes salir{
+  to{ opacity:0; transform: scale(.7) translateY(-30px); }
+}
+
+.carta--saliendo{
+  animation: salir .25s ease-in forwards;
+  pointer-events:none;
+}
+
+/* Tooltip tambien en los sobres */
+.sobre:hover .info,
+.sobre:focus-visible .info{
+  visibility:visible;
+  opacity:1;
+}
+
+
+/* ===========================================================
+   18. FILA DE ABAJO DEL PANEL
+   Ranura del vale a la izquierda y sobres a la derecha, cada
+   una en su caja con su etiqueta, como en Balatro.
+   =========================================================== */
+
+.estante-bajo{
+  display:grid;
+  grid-template-columns: auto minmax(0,1fr);
+  gap:12px;
+  align-items:stretch;
+}
+
+@media (max-width:620px){
+  .estante-bajo{ grid-template-columns: minmax(0,1fr); }
+}
+
+.ranura{
+  position:relative;
+  padding:6px 8px 6px 24px;
+  background:var(--hueco);
+  border:3px solid var(--borde);
+  border-radius:9px;
+}
+
+/* Etiqueta girada en el lateral, como el ANTE 1 VOUCHER */
+.ranura-etiqueta{
+  position:absolute;
+  left:2px;
+  top:50%;
+  transform:translateY(-50%) rotate(180deg);
+  writing-mode: vertical-rl;
+  font-size:.58rem;
+  letter-spacing:.14em;
+  color:#5E747E;
+  white-space:nowrap;
+}
+
+.ranura .sobres,
+.ranura .fila-vales{
+  margin:0;
+  justify-content:center;
+}
+
+/* Los mandos de arriba, uno encima del otro */
+.mandos{ align-content:start; }
+
+
+
+
+/* ===========================================================
+   20. ESQUELETOS
+   Siluetas del tamano exacto de las cartas mientras se cargan
+   los datos y las imagenes. Ocupan el mismo espacio que las
+   cartas reales, asi que la pagina no da saltos al revelarlas.
+   =========================================================== */
+
+.esqueleto{
+  flex:0 0 auto;
+  width:132px;
+  padding:6px;
+  background:var(--panel);
+  border:3px solid var(--borde);
+  border-radius:9px;
+  box-shadow:var(--sombra);
+  position:relative;
+  animation: respirar 1.3s ease-in-out infinite;
+}
+
+.esqueleto-precio{
+  position:absolute;
+  top:-12px;
+  left:50%;
+  transform:translateX(-50%);
+  width:56px;
+  height:24px;
+  border-radius:6px;
+  border:3px solid var(--borde);
+  background:#44525C;
+}
+
+.esqueleto-portada{
+  width:100%;
+  aspect-ratio:2 / 3;
+  border-radius:5px;
+  background:linear-gradient(170deg,#3A4A54,#232E35);
+}
+
+@keyframes respirar{
+  0%, 100%{ opacity:.45; }
+  50%     { opacity:.85; }
+}
+
+
+/* ===========================================================
+   21. NOTA DEL TOOLTIP
+   Para avisar de que el precio es el de la version de PC.
+   =========================================================== */
+
+.info-nota{
+  display:block;
+  margin:-2px 0 7px;
+  font-size:.6rem;
+  line-height:1.25;
+  color:#6C7A80;
+}
+
+.etiqueta-precio--gratis{
+  background:var(--verde);
+  color:#06291B;
+}
+
+
+/* ===========================================================
+   22. BOTON Y RESUMEN DE COMPRA
+   =========================================================== */
+
+#btn-comprar{
+  margin-top:10px;
+  font-size:.8rem;
+}
+
+#btn-comprar:disabled{
+  opacity:.45;
+  cursor:not-allowed;
+  box-shadow:0 4px 0 var(--borde);
+}
+
+.modal-caja--compra{
+  width:min(100%, 560px);
+  text-align:left;
+}
+
+.modal-caja--compra h2{ text-align:center; }
+.modal-caja--compra .modal-texto{ text-align:center; }
+
+.lista-compra{
+  list-style:none;
+  margin:14px 0;
+  padding:0;
+  display:grid;
+  gap:8px;
+}
+
+.linea-compra{
+  display:grid;
+  grid-template-columns: 40px minmax(0,1fr) auto auto;
+  align-items:center;
+  gap:10px;
+  padding:7px;
+  background:var(--hueco);
+  border:3px solid var(--borde);
+  border-radius:8px;
+}
+
+@media (max-width:480px){
+  .linea-compra{
+    grid-template-columns: 40px minmax(0,1fr);
+    row-gap:6px;
+  }
+  .linea-precio,
+  .linea-ir{ grid-column:2; }
+}
+
+.linea-compra img,
+.linea-sin-imagen{
+  width:40px;
+  height:54px;
+  object-fit:cover;
+  border-radius:4px;
+  background:#2D3A42;
+  display:block;
+}
+
+.linea-titulo{
+  font-size:.76rem;
+  line-height:1.25;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.linea-precio{
+  font-size:.82rem;
+  font-weight:700;
+  color:var(--oro);
+  white-space:nowrap;
+}
+
+.linea-ir{
+  width:auto;
+  padding:5px 10px;
+  font-size:.66rem;
+  text-decoration:none;
+  white-space:nowrap;
+}
+
+.total-compra{
+  margin:14px 0 16px;
+  text-align:right;
+  font-size:.9rem;
+  color:var(--tinta-tenue);
+}
+
+.total-compra strong{
+  font-size:1.3rem;
+  color:var(--oro);
+}
+
+.botones-compra{
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  flex-wrap:wrap;
+}
+
+.botones-compra .boton{
+  width:auto;
+  padding:9px 18px;
+  font-size:.78rem;
+}
+
+
+
+
+/* ===========================================================
+   25. VALES ACTIVOS (columna derecha)
+   =========================================================== */
+
+.vales-activos header{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  gap:10px;
+}
+
+.fila-activos{
+  display:grid;
+  gap:8px;
+  margin-bottom:6px;
+}
+
+.vale-activo{
+  position:relative;
+  display:grid;
+  grid-template-columns: 30px minmax(0,1fr);
+  align-items:center;
+  gap:8px;
+  padding:8px 8px 8px 7px;
+  background:var(--hueco);
+  border:3px solid var(--oro);
+  border-radius:8px;
+}
+
+.vale-activo-icono{
+  display:grid;
+  place-items:center;
+  width:30px;
+  height:30px;
+  border-radius:6px;
+  background:var(--oro);
+  color:#2A1E02;
+  font-size:.95rem;
+}
+
+.vale-activo-texto strong{
+  display:block;
+  font-size:.72rem;
+  color:var(--oro);
+  line-height:1.2;
+}
+
+.vale-activo-texto span{
+  display:block;
+  margin-top:2px;
+  font-size:.6rem;
+  line-height:1.3;
+  color:var(--tinta-tenue);
+}
+
+.quitar--vale{
+  top:-8px;
+  right:-8px;
+  width:20px;
+  height:20px;
+  font-size:.8rem;
+  opacity:1;              /* en los vales siempre visible */
+}
+
+/* Vale ya canjeado: no se puede pulsar hasta liberar hueco */
+.vale-carta--bloqueada .vale-cuerpo{
+  filter: grayscale(.7);
+  opacity:.55;
+}
+
+
+/* ===========================================================
+   26. ICONOS DE SOBRE Y VALE
+   =========================================================== */
+
+.envoltorio{
+  flex-direction:column;
+  gap:6px;
+}
+
+.envoltorio-icono{
+  display:grid;
+  place-items:center;
+  width:30px;
+  height:30px;
+  border-radius:6px;
+  background:rgba(255,255,255,.85);
+  color:#1B252B;
+  font-size:1rem;
+}
+
+.envoltorio--oro{    background:linear-gradient(170deg,#E8B33A,#7A5407); }
+.envoltorio--morado{ background:linear-gradient(170deg,#8A5BD0,#361F5E); }
+
+
+/* ===========================================================
+   27. DIEZ HUECOS
+   Con diez slots la fila se parte en dos, asi que los hacemos
+   algo mas pequenos para que quepan cinco por linea.
+   =========================================================== */
+
+.fila-slots{ gap:7px; }
+
+.slot{ width:58px; }
+
+@media (max-width:520px){
+  .slot{ width:52px; }
+}

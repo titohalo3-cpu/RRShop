@@ -20,6 +20,10 @@ const BASE = "https://www.cheapshark.com/api/1.0";
 // convertir nuestro proxy en un reenviador de cualquier cosa.
 const RUTAS = ["deals", "games"];
 
+// CheapShark responde 400 si el User-Agent es generico (el de Node
+// lo es): pide que cada cliente se identifique con uno propio.
+const AGENTE = "RRShop/1.0 (+https://rrshop.vercel.app)";
+
 module.exports = async function handler(peticion, respuesta) {
   const { ruta, ...parametros } = peticion.query;
 
@@ -34,7 +38,7 @@ module.exports = async function handler(peticion, respuesta) {
   }
 
   try {
-    const salida = await fetch(url);
+    const salida = await fetch(url, { headers: { "User-Agent": AGENTE } });
 
     if (!salida.ok) {
       respuesta.status(salida.status).json({ error: "CheapShark respondio " + salida.status });

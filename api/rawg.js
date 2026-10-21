@@ -17,6 +17,16 @@
 
 const BASE = "https://api.rawg.io/api/games";
 
+/* RAWG devuelve en next y previous el enlace a la pagina
+   siguiente con la clave dentro. Hay que quitarla antes de
+   responder, o el navegador la veria igualmente. */
+function sinClave(enlace) {
+  if (!enlace) return enlace;
+  const url = new URL(enlace);
+  url.searchParams.delete("key");
+  return url.toString();
+}
+
 module.exports = async function handler(peticion, respuesta) {
   const clave = process.env.RAWG_KEY;
 
@@ -41,6 +51,8 @@ module.exports = async function handler(peticion, respuesta) {
     }
 
     const datos = await salida.json();
+    datos.next = sinClave(datos.next);
+    datos.previous = sinClave(datos.previous);
 
     // Los generos de un juego no cambian: cache de una hora
     respuesta.setHeader("Cache-Control", "s-maxage=3600, stale-while-revalidate=86400");
